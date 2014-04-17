@@ -20,4 +20,4 @@ end
 
 Matt Greensmith for [Cozy](http://www.cozy.co)
 
-This processor is a direct copy of the sanitizedata.rb processor from the sentry-raven gem. All source licensing applies.
+This processor is a modified version of the sanitizedata.rb processor from the sentry-raven gem. All source licensing applies.

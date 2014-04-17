@@ -1,20 +1,16 @@
 ## Attribution
-# This class is a direct copy of the sanitizedata.rb processor
+# This class is a modified version of the sanitizedata.rb processor
 # from the sentry-raven gem. All source licensing applies.
 #
 # https://github.com/getsentry/raven-ruby/blob/master/lib/raven/processors/sanitizedata.rb
 #
-# The only local modification is to the FIELDS_RE regex
-# to match SSN-like strings.
-
 
 require 'raven/processor'
+require 'json'
 
 module Raven
   module Processor
     class SanitizeSSN < Processor
-
-      VERSION = "0.0.1"
 
       MASK = '********'
       FIELDS_RE = /(ssn|social(.*)?sec)/i
@@ -22,6 +18,7 @@ module Raven
 
       def apply(value, key = nil, visited = [], &block)
         if value.is_a?(Hash)
+
           return "{...}" if visited.include?(value.__id__)
           visited += [value.__id__]
 
@@ -36,6 +33,8 @@ module Raven
           value.map do |value_|
             apply(value_, key, visited, &block)
           end
+        elsif json_data = parse_as_json(value) && json_data.is_a?(Hash)
+          apply(json_data, key, visited, &block)
         else
           block.call(key, value)
         end
@@ -58,6 +57,14 @@ module Raven
       end
 
       private
+
+      def parse_as_json(value)
+        begin
+          JSON.parse(value)
+        rescue JSON::ParserError
+          value
+        end
+      end
 
       def clean_invalid_utf8_bytes(text)
         if RUBY_VERSION <= '1.8.7'
