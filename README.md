@@ -11,6 +11,7 @@ This is a processor plugin for the [Sentry Raven client](https://github.com/gets
 Add this processor to the `processors` method of a Raven `config` block. You may also want to include Raven's default processor `Raven::Processor::SanitizeData`, or it will become disabled when you override the `processors` list.
 
 ```
+require 'raven/processors/sanitizessn'
 Raven.configure do |config|
   config.processors = [Raven::Processor::SanitizeData, Raven::Processor::SanitizeSSN]
 end
