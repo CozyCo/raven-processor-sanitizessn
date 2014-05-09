@@ -59,11 +59,7 @@ module Raven
       private
 
       def parse_as_json(value)
-        begin
-          JSON.parse(value)
-        rescue JSON::ParserError
-          value
-        end
+        JSON.parse(value) rescue value
       end
 
       def clean_invalid_utf8_bytes(text)
