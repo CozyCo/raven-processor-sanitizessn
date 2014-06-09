@@ -33,8 +33,16 @@ module Raven
           value.map do |value_|
             apply(value_, key, visited, &block)
           end
-        elsif json_data = parse_as_json(value) && json_data.is_a?(Hash)
-          apply(json_data, key, visited, &block)
+        elsif value.is_a?(String) && json_hash = JSON.parse(value) rescue nil
+          return "[...]" if visited.include?(value.__id__)
+          visited += [value.__id__]
+
+          json_hash = json_hash.each.reduce({}) do |memo, (k, v)|
+            memo[k] = apply(v, k, visited, &block)
+            memo
+          end
+
+          json_hash.to_json
         else
           block.call(key, value)
         end
@@ -57,10 +65,6 @@ module Raven
       end
 
       private
-
-      def parse_as_json(value)
-        JSON.parse(value) rescue value
-      end
 
       def clean_invalid_utf8_bytes(text)
         if RUBY_VERSION <= '1.8.7'
