@@ -2,6 +2,8 @@
 
 This is a processor plugin for the [Sentry Raven client](https://github.com/getsentry/raven-ruby) that enables sanitizing Social Security numbers from data sent to Senty.
 
+> DEPRECATION NOTICE: This gem is deprecated as of `sentry-raven 0.11.1`; this functionality is now available in the core [Sentry Raven client](https://github.com/getsentry/raven-ruby) gem.
+
 ## Installation
 
     $ gem install raven-processor-sanitizessn
